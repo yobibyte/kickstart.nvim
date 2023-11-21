@@ -54,6 +54,56 @@ require('lazy').setup({
       'folke/neodev.nvim',
     },
   },
+  {
+      "nvim-neo-tree/neo-tree.nvim",
+      branch = "v3.x",
+      dependencies = {
+        "nvim-lua/plenary.nvim",
+        --"nvim-tree/nvim-web-devicons", -- commented out as this requires additional font fuckery and I don't need those
+        "MunifTanjim/nui.nvim",
+        --"3rd/image.nvim", -- Optional image support in preview window: See `# Preview Mode` for more information
+      },
+      opts = {
+        window = {
+          position = "right",
+        },
+        filesystem = {
+          filtered_items = {
+            hide_dotfiles = false,
+          }
+        },
+        default_component_configs = {
+          icon = {
+            folder_open = "",
+            folder_closed = "",
+            folder_empty_open = "",
+            file = "",
+            git = "",
+            default = "",
+            highlight = "",
+          },
+        },
+        git_status = {
+          symbols = {
+            added     = "",
+            deleted   = "",
+            modified  = "",
+            renamed   = "",
+            untracked = "",
+            ignored   = "",
+            unstaged  = "",
+            staged    = "",
+            conflict  = "",
+          },
+        },
+      },
+      --  vim.g.nvim_tree_show_icons = {
+      --    git = 0,
+      --    folders = 0,
+      --    files = 0,
+      --    folder_arrows = 0,
+      --  }
+  },
 
   {
     -- Autocompletion
@@ -561,6 +611,7 @@ cmp.setup {
     { name = 'luasnip' },
   },
 }
+
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
