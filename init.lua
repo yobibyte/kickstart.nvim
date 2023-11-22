@@ -1,13 +1,8 @@
--- Set <space> as the leader key
--- See `:help mapleader`
---  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
+
 vim.keymap.set('n', "<leader>t", vim.cmd.Ex)
 
--- [[ Install `lazy.nvim` plugin manager ]]
---    https://github.com/folke/lazy.nvim
---    `:help lazy.nvim.txt` for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system {
@@ -23,7 +18,6 @@ vim.opt.rtp:prepend(lazypath)
 
 -- [[ Configure plugins ]]
 require('lazy').setup({
-  -- NOTE: First, some plugins that don't require any configuration
 
   -- Git related plugins
   'tpope/vim-fugitive',
@@ -49,6 +43,16 @@ require('lazy').setup({
       -- Additional lua configuration, makes nvim stuff amazing!
       'folke/neodev.nvim',
     },
+  },
+  {
+      "ThePrimeagen/harpoon",
+      config = function()
+        local mark = require("harpoon.mark");
+        local ui = require("harpoon.ui");
+        vim.keymap.set("n", "<leader>ha", mark.add_file)
+        vim.keymap.set("n", "<C-e>", ui.toggle_quick_menu)
+      end;
+      dependencies = {"nvim-lua/plenary.nvim",},
   },
   {
       "nvim-neo-tree/neo-tree.nvim",
