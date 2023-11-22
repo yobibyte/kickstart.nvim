@@ -70,7 +70,8 @@ require('lazy').setup({
         filesystem = {
           filtered_items = {
             hide_dotfiles = false,
-          }
+          },
+          hijack_netrw_behavior = "disabled",
         },
         default_component_configs = {
           icon = {
@@ -97,12 +98,6 @@ require('lazy').setup({
           },
         },
       },
-      --  vim.g.nvim_tree_show_icons = {
-      --    git = 0,
-      --    folders = 0,
-      --    files = 0,
-      --    folder_arrows = 0,
-      --  }
   },
   {"ghillb/cybu.nvim",
     config = function()
