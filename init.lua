@@ -60,6 +60,21 @@ require('lazy').setup({
       end;
       dependencies = {"nvim-lua/plenary.nvim",},
   },
+  -- Testing harpoon 2
+  --{
+      -- "ThePrimeagen/harpoon",
+      -- branch="harpoon2",
+      -- config = function()
+      --   local harpoon = require("harpoon");
+      --   vim.keymap.set("n", "<leader>ha", function() harpoon:list():append() end)
+      --   vim.keymap.set("n", "<C-e>", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
+      --   vim.keymap.set("n", "<C-h>", function() harpoon:list():select(1) end)
+      --   vim.keymap.set("n", "<C-j>", function() harpoon:list():select(2) end)
+      --   vim.keymap.set("n", "<C-t>", function() harpoon:list():select(3) end)
+      --
+      -- end,
+      -- dependencies = {"nvim-lua/plenary.nvim",},
+  --},
   {
       "nvim-neo-tree/neo-tree.nvim",
       branch = "v3.x",
