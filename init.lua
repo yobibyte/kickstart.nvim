@@ -3,7 +3,7 @@ vim.g.maplocalleader = ' '
 
 vim.keymap.set('n', "<leader>t", vim.cmd.Ex)
 function toggle_rn()
-    vim.o.relativenumber = not vim.o.relativenumber
+  vim.o.relativenumber = not vim.o.relativenumber
 end
 
 vim.keymap.set('n', "<leader>n", ':lua toggle_rn()<CR>')
@@ -31,14 +31,15 @@ require('lazy').setup({
 
   {
     'stevearc/conform.nvim',
-      opts = {
+    opts = {
       formatters_by_ft = {
         lua = { "stylua" },
         -- Conform will run multiple formatters sequentially
         python = { "isort", "black" },
         -- Use a sub-list to run only the first available formatter
         javascript = { { "prettierd", "prettier" } },
-      },},
+      },
+    },
   },
 
   -- Detect tabstop and shiftwidth automatically
@@ -74,66 +75,66 @@ require('lazy').setup({
   -- },
   -- Testing harpoon 2
   {
-      "ThePrimeagen/harpoon",
-      branch="harpoon2",
-      config = function()
-        local harpoon = require("harpoon");
-        harpoon:setup()
-        vim.keymap.set("n", "<leader>ha", function() harpoon:list():append() end)
-        vim.keymap.set("n", "<C-e>", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
-        --vim.keymap.set("n", "<C-h>", function() harpoon:list():select(1) end)
-        --vim.keymap.set("n", "<C-j>", function() harpoon:list():select(2) end)
-        --vim.keymap.set("n", "<C-t>", function() harpoon:list():select(3) end)
-
-      end,
-      dependencies = {"nvim-lua/plenary.nvim",},
+    "ThePrimeagen/harpoon",
+    branch = "harpoon2",
+    config = function()
+      local harpoon = require("harpoon");
+      harpoon:setup()
+      vim.keymap.set("n", "<leader>ha", function() harpoon:list():append() end)
+      vim.keymap.set("n", "<C-e>", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
+      --vim.keymap.set("n", "<C-h>", function() harpoon:list():select(1) end)
+      --vim.keymap.set("n", "<C-j>", function() harpoon:list():select(2) end)
+      --vim.keymap.set("n", "<C-t>", function() harpoon:list():select(3) end)
+    end,
+    dependencies = { "nvim-lua/plenary.nvim", },
   },
   {
-      "nvim-neo-tree/neo-tree.nvim",
-      branch = "v3.x",
-      dependencies = {
-        "nvim-lua/plenary.nvim",
-        --"nvim-tree/nvim-web-devicons", -- commented out as this requires additional font fuckery and I don't need those
-        "MunifTanjim/nui.nvim",
-        --"3rd/image.nvim", -- Optional image support in preview window: See `# Preview Mode` for more information
+    "nvim-neo-tree/neo-tree.nvim",
+    branch = "v3.x",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      --"nvim-tree/nvim-web-devicons", -- commented out as this requires additional font fuckery and I don't need those
+      "MunifTanjim/nui.nvim",
+      --"3rd/image.nvim", -- Optional image support in preview window: See `# Preview Mode` for more information
+    },
+    opts = {
+      window = {
+        position = "right",
       },
-      opts = {
-        window = {
-          position = "right",
+      filesystem = {
+        filtered_items = {
+          hide_dotfiles = false,
         },
-        filesystem = {
-          filtered_items = {
-            hide_dotfiles = false,
-          },
-          hijack_netrw_behavior = "disabled",
-        },
-        default_component_configs = {
-          icon = {
-            folder_open = "",
-            folder_closed = "",
-            folder_empty_open = "",
-            file = "",
-            git = "",
-            default = "",
-            highlight = "",
-          },
-        },
-        git_status = {
-          symbols = {
-            added     = "",
-            deleted   = "",
-            modified  = "",
-            renamed   = "",
-            untracked = "",
-            ignored   = "",
-            unstaged  = "",
-            staged    = "",
-            conflict  = "",
-          },
+        hijack_netrw_behavior = "disabled",
+      },
+      default_component_configs = {
+        icon = {
+          folder_open = "",
+          folder_closed = "",
+          folder_empty_open = "",
+          file = "",
+          git = "",
+          default = "",
+          highlight = "",
         },
       },
+      git_status = {
+        symbols = {
+          added     = "",
+          deleted   = "",
+          modified  = "",
+          renamed   = "",
+          untracked = "",
+          ignored   = "",
+          unstaged  = "",
+          staged    = "",
+          conflict  = "",
+        },
+      },
+    },
   },
-  {"ghillb/cybu.nvim",
+  {
+    "ghillb/cybu.nvim",
     config = function()
       local ok, cybu = pcall(require, "cybu")
       if not ok then
@@ -141,20 +142,21 @@ require('lazy').setup({
       end
       cybu.setup({
         style = {
-        path = "relative",
-        path_abbreviation = "none",
-        border = "single",
-        separator = " ",
-        prefix = "…",
-        padding = 1,
-        hide_buffer_id = false,
-        devicons = {
-          enabled = false,
-          colored = false,
-          truncate = false,
-        },},
+          path = "relative",
+          path_abbreviation = "none",
+          border = "single",
+          separator = " ",
+          prefix = "…",
+          padding = 1,
+          hide_buffer_id = false,
+          devicons = {
+            enabled = false,
+            colored = false,
+            truncate = false,
+          },
+        },
       })
-      --vim.keymap.set("n", "K", "<Plug>(CybuPrev)")
+      vim.keymap.set("n", "H", "<Plug>(CybuPrev)")
       vim.keymap.set("n", "J", "<Plug>(CybuNext)")
       --vim.keymap.set({"n", "v"}, "<c-s-tab>", "<plug>(CybuLastusedPrev)")
       --vim.keymap.set({"n", "v"}, "<c-tab>", "<plug>(CybuLastusedNext)")
@@ -178,7 +180,7 @@ require('lazy').setup({
   },
 
   -- Useful plugin to show you pending keybinds.
-  { 'folke/which-key.nvim', opts = {} },
+  { 'folke/which-key.nvim',  opts = {} },
   {
     -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
@@ -310,7 +312,8 @@ require("conform").setup({
   format_on_save = {
     timeout_ms = 500,
     lsp_fallback = true,
-},})
+  },
+})
 
 -- Set highlight on search
 vim.o.hlsearch = false
@@ -421,7 +424,7 @@ local function live_grep_git_root()
   local git_root = find_git_root()
   if git_root then
     require('telescope.builtin').live_grep({
-      search_dirs = {git_root},
+      search_dirs = { git_root },
     })
   end
 end
