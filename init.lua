@@ -30,6 +30,11 @@ require('lazy').setup({
   'tpope/vim-rhubarb',
   'simrat39/symbols-outline.nvim',
 
+  -- rust-related
+  'simrat39/rust-tools.nvim',
+
+  'mbbill/undotree',
+
   {
     'stevearc/conform.nvim',
     opts = {
@@ -736,6 +741,7 @@ local opts = {
 }
 require("symbols-outline").setup(opts)
 vim.keymap.set('n', "<leader>o", ":SymbolsOutline<CR>")
+vim.keymap.set('n', "<leader>k", vim.cmd.UndotreeToggle)
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
