@@ -43,7 +43,7 @@ require('lazy').setup({
         -- Conform will run multiple formatters sequentially
         python = { "isort", "black" },
         -- Use a sub-list to run only the first available formatter
-        javascript = { { "prettierd", "prettier" } },
+        -- javascript = { { "prettierd", "prettier" } },
       },
     },
   },
@@ -79,7 +79,6 @@ require('lazy').setup({
   --   end,
   --   dependencies = { "nvim-lua/plenary.nvim", },
   -- },
-  -- Testing harpoon 2
   {
     "ThePrimeagen/harpoon",
     branch = "harpoon2",
