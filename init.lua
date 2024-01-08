@@ -34,6 +34,8 @@ require('lazy').setup({
   'simrat39/rust-tools.nvim',
 
   'mbbill/undotree',
+  -- Detect tabstop and shiftwidth automatically
+  'tpope/vim-sleuth',
 
   {
     'stevearc/conform.nvim',
@@ -47,12 +49,6 @@ require('lazy').setup({
       },
     },
   },
-
-  -- Detect tabstop and shiftwidth automatically
-  'tpope/vim-sleuth',
-
-  -- NOTE: This is where your plugins related to LSP can be installed.
-  --  The configuration is done below. Search for lspconfig to find it below.
   {
     -- LSP Configuration & Plugins
     'neovim/nvim-lspconfig',
@@ -77,56 +73,11 @@ require('lazy').setup({
       harpoon:setup()
       vim.keymap.set("n", "<leader>ha", function() harpoon:list():append() end)
       vim.keymap.set("n", "<C-e>", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
-      --vim.keymap.set("n", "<C-h>", function() harpoon:list():select(1) end)
-      --vim.keymap.set("n", "<C-j>", function() harpoon:list():select(2) end)
-      --vim.keymap.set("n", "<C-t>", function() harpoon:list():select(3) end)
+      vim.keymap.set("n", "<C-h>", function() harpoon:list():select(1) end)
+      vim.keymap.set("n", "<C-j>", function() harpoon:list():select(2) end)
+      vim.keymap.set("n", "<C-t>", function() harpoon:list():select(3) end)
     end,
     dependencies = { "nvim-lua/plenary.nvim", },
-  },
-  {
-    "nvim-neo-tree/neo-tree.nvim",
-    branch = "v3.x",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      --"nvim-tree/nvim-web-devicons", -- commented out as this requires additional font fuckery and I don't need those
-      "MunifTanjim/nui.nvim",
-      --"3rd/image.nvim", -- Optional image support in preview window: See `# Preview Mode` for more information
-    },
-    opts = {
-      window = {
-        position = "right",
-      },
-      filesystem = {
-        filtered_items = {
-          hide_dotfiles = false,
-        },
-        hijack_netrw_behavior = "disabled",
-      },
-      default_component_configs = {
-        icon = {
-          folder_open = "",
-          folder_closed = "",
-          folder_empty_open = "",
-          file = "",
-          git = "",
-          default = "",
-          highlight = "",
-        },
-      },
-      git_status = {
-        symbols = {
-          added     = "",
-          deleted   = "",
-          modified  = "",
-          renamed   = "",
-          untracked = "",
-          ignored   = "",
-          unstaged  = "",
-          staged    = "",
-          conflict  = "",
-        },
-      },
-    },
   },
   {
     "ghillb/cybu.nvim",
@@ -294,8 +245,7 @@ require('lazy').setup({
   -- { import = 'custom.plugins' },
 }, {})
 
--- [[ Setting options ]]
--- See `:help vim.o`
+-- Autoformat on save
 -- vim.api.nvim_create_autocmd("BufWritePre", {
 --   pattern = "*",
 --   callback = function(args)
