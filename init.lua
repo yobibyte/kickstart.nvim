@@ -107,12 +107,8 @@ require('lazy').setup({
       -- Snippet Engine & its associated nvim-cmp source
       'L3MON4D3/LuaSnip',
       'saadparwaiz1/cmp_luasnip',
-
       -- Adds LSP completion capabilities
       'hrsh7th/cmp-nvim-lsp',
-
-      -- Adds a number of user-friendly snippets
-      -- 'rafamadriz/friendly-snippets',
     },
   },
 
@@ -183,8 +179,6 @@ require('lazy').setup({
   {
     -- Add indentation guides even on blank lines
     'lukas-reineke/indent-blankline.nvim',
-    -- Enable `lukas-reineke/indent-blankline.nvim`
-    -- See `:help ibl`
     main = 'ibl',
     opts = {},
   },
@@ -223,15 +217,10 @@ require('lazy').setup({
   },
 
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
-  --       These are some example plugins that I've included in the kickstart repository.
   -- require 'kickstart.plugins.autoformat',
-
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
-  --    You can use this folder to prevent any conflicts with this init.lua if you're interested in keeping
   --    up-to-date with whatever is in the kickstart repo.
   --    Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  --
-  --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
   -- { import = 'custom.plugins' },
 }, {})
 
@@ -258,10 +247,7 @@ vim.wo.number = true
 -- Enable mouse mode
 vim.o.mouse = 'a'
 
--- Sync clipboard between OS and Neovim.
 vim.o.clipboard = 'unnamedplus'
-
--- Enable break indent
 vim.o.breakindent = true
 
 -- Save undo history
@@ -286,8 +272,6 @@ vim.o.termguicolors = true
 
 -- [[ Basic Keymaps ]]
 
--- Keymaps for better default experience
--- See `:help vim.keymap.set()`
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 
 -- Remap for dealing with word wrap
@@ -301,7 +285,6 @@ vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open float
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
 
 -- [[ Highlight on yank ]]
--- See `:help vim.highlight.on_yank()`
 local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
 vim.api.nvim_create_autocmd('TextYankPost', {
   callback = function()
@@ -312,7 +295,6 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 })
 
 -- [[ Configure Telescope ]]
--- See `:help telescope` and `:help telescope.setup()`
 require('telescope').setup {
   defaults = {
     mappings = {
