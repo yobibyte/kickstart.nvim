@@ -88,13 +88,6 @@ require('lazy').setup({
       end
       cybu.setup({
         style = {
-          path = "relative",
-          path_abbreviation = "none",
-          border = "single",
-          separator = " ",
-          prefix = "…",
-          padding = 1,
-          hide_buffer_id = false,
           devicons = {
             enabled = false,
             colored = false,
