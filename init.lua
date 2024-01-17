@@ -210,6 +210,12 @@ require('lazy').setup({
     },
     build = ':TSUpdate',
   },
+  {
+    "danymat/neogen",
+    dependencies = "nvim-treesitter/nvim-treesitter",
+    config = true,
+    languages = {python = {template = {annotation_convention = "google_docstrings"}}},
+  }
 
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   -- require 'kickstart.plugins.autoformat',
@@ -634,6 +640,8 @@ local opts = {
 require("symbols-outline").setup(opts)
 vim.keymap.set('n', "<leader>o", ":SymbolsOutline<CR>")
 vim.keymap.set('n', "<leader>k", vim.cmd.UndotreeToggle)
+
+vim.api.nvim_set_keymap("n", "<Leader>cc", ":lua require('neogen').generate()<CR>", {noremap = true, silent = true})
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
