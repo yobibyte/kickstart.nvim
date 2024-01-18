@@ -496,6 +496,7 @@ local servers = {
       telemetry = { enable = false },
     },
   },
+  html = {},
 }
 
 -- Setup neovim lua configuration
@@ -642,6 +643,13 @@ vim.keymap.set('n', "<leader>o", ":SymbolsOutline<CR>")
 vim.keymap.set('n', "<leader>k", vim.cmd.UndotreeToggle)
 
 vim.api.nvim_set_keymap("n", "<Leader>cc", ":lua require('neogen').generate()<CR>", {noremap = true, silent = true})
+
+-- update buffers if files were changed outside
+vim.o.autoread = true
+vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "CursorHoldI", "FocusGained" }, {
+  command = "if mode() != 'c' | checktime | endif",
+  pattern = { "*" },
+})
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
