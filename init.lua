@@ -95,8 +95,8 @@ require('lazy').setup({
           },
         },
       })
-      vim.keymap.set("n", "H", "<Plug>(CybuPrev)")
-      vim.keymap.set("n", "J", "<Plug>(CybuNext)")
+      vim.keymap.set("n", "<leader>j", "<Plug>(CybuPrev)")
+      vim.keymap.set("n", "<leader>l", "<Plug>(CybuNext)")
     end,
   },
 
