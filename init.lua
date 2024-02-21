@@ -80,27 +80,6 @@ require('lazy').setup({
     dependencies = { "nvim-lua/plenary.nvim", },
   },
   {
-    "ghillb/cybu.nvim",
-    config = function()
-      local ok, cybu = pcall(require, "cybu")
-      if not ok then
-        return
-      end
-      cybu.setup({
-        style = {
-          devicons = {
-            enabled = false,
-            colored = false,
-            truncate = false,
-          },
-        },
-      })
-      vim.keymap.set("n", "<leader>j", "<Plug>(CybuPrev)")
-      vim.keymap.set("n", "<leader>l", "<Plug>(CybuNext)")
-    end,
-  },
-
-  {
     -- Autocompletion
     'hrsh7th/nvim-cmp',
     dependencies = {
@@ -497,6 +476,7 @@ local servers = {
     },
   },
   html = {},
+  rust_analyzer = {},
 }
 
 -- Setup neovim lua configuration
