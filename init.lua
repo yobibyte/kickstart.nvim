@@ -32,9 +32,9 @@ require('lazy').setup({
   -- rust-related
   'simrat39/rust-tools.nvim',
 
-  'mbbill/undotree',
   -- Detect tabstop and shiftwidth automatically
   'tpope/vim-sleuth',
+  'mbbill/undotree',
 
   {
     -- LSP Configuration & Plugins
@@ -43,12 +43,9 @@ require('lazy').setup({
       -- Automatically install LSPs to stdpath for neovim
       'williamboman/mason.nvim',
       'williamboman/mason-lspconfig.nvim',
-
       -- Useful status updates for LSP
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
       { 'j-hui/fidget.nvim', opts = {} },
-
-      -- Additional lua configuration, makes nvim stuff amazing!
       'folke/neodev.nvim',
     },
   },
@@ -128,9 +125,7 @@ require('lazy').setup({
   },
 
   {
-    -- Set lualine as statusline
     'nvim-lualine/lualine.nvim',
-    -- See `:help lualine.txt`
     opts = {
       options = {
         icons_enabled = false,
@@ -148,7 +143,6 @@ require('lazy').setup({
     opts = {},
   },
 
-  -- "gc" to comment visual regions/lines
   { 'numToStr/Comment.nvim', opts = {} },
 
   -- Fuzzy Finder (files, lsp, etc)
@@ -242,7 +236,6 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   pattern = '*',
 })
 
--- [[ Configure Telescope ]]
 require('telescope').setup {
   defaults = {
     mappings = {
@@ -399,7 +392,6 @@ local on_attach = function(_, bufnr)
   nmap('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
   nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
 
-  -- See `:help K` for why this keymap
   nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
   nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
 
@@ -446,7 +438,6 @@ local servers = {
   rust_analyzer = {},
 }
 
--- Setup neovim lua configuration
 require('neodev').setup()
 
 -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
@@ -521,27 +512,17 @@ cmp.setup {
   },
 }
 local opts = {
-  highlight_hovered_item = true,
-  show_guides = true,
   auto_preview = false,
-  position = 'right',
-  relative_width = true,
   width = 25,
-  auto_close = false,
-  show_numbers = false,
-  show_relative_numbers = false,
   show_symbol_details = true,
   preview_bg_highlight = 'Pmenu',
   autofold_depth = nil,
-  auto_unfold_hover = true,
-  fold_markers = { '+', '-' },
   wrap = false,
   keymaps = { -- These keymaps can be a string or a table for multiple keys
     close = { "<Esc>", "q" },
     goto_location = "<Cr>",
     focus_location = "o",
     hover_symbol = "<C-space>",
-    -- toggle_preview = "K",
     rename_symbol = "r",
     code_actions = "a",
     fold = "h",
