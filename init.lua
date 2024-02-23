@@ -50,20 +50,6 @@ require('lazy').setup({
     },
   },
   {
-    "ThePrimeagen/harpoon",
-    branch = "harpoon2",
-    config = function()
-      local harpoon = require("harpoon");
-      harpoon:setup()
-      vim.keymap.set("n", "<leader>ha", function() harpoon:list():append() end)
-      vim.keymap.set("n", "<C-e>", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
-      vim.keymap.set("n", "<C-h>", function() harpoon:list():select(1) end)
-      vim.keymap.set("n", "<C-j>", function() harpoon:list():select(2) end)
-      vim.keymap.set("n", "<C-t>", function() harpoon:list():select(3) end)
-    end,
-    dependencies = { "nvim-lua/plenary.nvim", },
-  },
-  {
     -- Autocompletion
     'hrsh7th/nvim-cmp',
     dependencies = {
@@ -78,10 +64,8 @@ require('lazy').setup({
   -- Useful plugin to show you pending keybinds.
   { 'folke/which-key.nvim',  opts = {} },
   {
-    -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
     opts = {
-      -- See `:help gitsigns.txt`
       signs = {
         add = { text = '+' },
         change = { text = '~' },
