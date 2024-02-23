@@ -27,7 +27,6 @@ require('lazy').setup({
 
   -- Git related plugins
   'tpope/vim-fugitive',
-  'tpope/vim-rhubarb',
   'simrat39/symbols-outline.nvim',
 
   -- rust-related
@@ -133,7 +132,6 @@ require('lazy').setup({
   },
 
   {
-    -- Theme inspired by Atom
     'navarasu/onedark.nvim',
     priority = 1000,
     config = function()
@@ -196,27 +194,9 @@ require('lazy').setup({
     languages = {python = {template = {annotation_convention = "google_docstrings"}}},
   }
 
-  -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
-  -- require 'kickstart.plugins.autoformat',
-  -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
-  --    up-to-date with whatever is in the kickstart repo.
-  --    Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
+  -- Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   -- { import = 'custom.plugins' },
 }, {})
-
--- Autoformat on save
--- vim.api.nvim_create_autocmd("BufWritePre", {
---   pattern = "*",
---   callback = function(args)
---     require("conform").format({ bufnr = args.buf })
---   end,
--- })
--- require("conform").setup({
---   format_on_save = {
---     timeout_ms = 500,
---     lsp_fallback = true,
---   },
--- })
 
 -- Set highlight on search
 vim.o.hlsearch = false
