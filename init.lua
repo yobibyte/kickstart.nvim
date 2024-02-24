@@ -1,14 +1,6 @@
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
-vim.keymap.set('n', "<leader>t", vim.cmd.Ex)
-function toggle_rn()
-  vim.o.relativenumber = not vim.o.relativenumber
-end
-
-vim.keymap.set('n', "<leader>n", ':lua toggle_rn()<CR>')
-
-
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system {
@@ -22,20 +14,15 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
--- [[ Configure plugins ]]
 require('lazy').setup({
-
   -- Git related plugins
   'tpope/vim-fugitive',
   'simrat39/symbols-outline.nvim',
-
   -- rust-related
   'simrat39/rust-tools.nvim',
-
   -- Detect tabstop and shiftwidth automatically
   'tpope/vim-sleuth',
   'mbbill/undotree',
-
   {
     -- LSP Configuration & Plugins
     'neovim/nvim-lspconfig',
@@ -55,12 +42,9 @@ require('lazy').setup({
       -- Snippet Engine & its associated nvim-cmp source
       'L3MON4D3/LuaSnip',
       'saadparwaiz1/cmp_luasnip',
-      -- Adds LSP completion capabilities
       'hrsh7th/cmp-nvim-lsp',
     },
   },
-
-  -- Useful plugin to show you pending keybinds.
   { 'folke/which-key.nvim',  opts = {} },
   {
     'lewis6991/gitsigns.nvim',
@@ -68,14 +52,11 @@ require('lazy').setup({
       signs = {
         add = { text = '+' },
         change = { text = '~' },
-        delete = { text = '_' },
-        topdelete = { text = '‾' },
         changedelete = { text = '~' },
       },
       on_attach = function(bufnr)
         vim.keymap.set('n', '<leader>hp', require('gitsigns').preview_hunk, { buffer = bufnr, desc = 'Preview git hunk' })
-        vim.keymap.set('n', '<leader>hr', require('gitsigns').reset_hunk, {desc = 'Reset hunk'})
-
+        vim.keymap.set('n', '<leader>hr', require('gitsigns').reset_hunk, { desc = 'Reset hunk' })
         -- don't override the built-in and fugitive keymaps
         local gs = package.loaded.gitsigns
         vim.keymap.set({ 'n', 'v' }, ']c', function()
@@ -99,7 +80,6 @@ require('lazy').setup({
       end,
     },
   },
-
   {
     'EdenEast/nightfox.nvim',
     priority = 1000,
@@ -118,16 +98,8 @@ require('lazy').setup({
       },
     },
   },
-
-  {
-    -- Add indentation guides even on blank lines
-    'lukas-reineke/indent-blankline.nvim',
-    main = 'ibl',
-    opts = {},
-  },
-
+  {'lukas-reineke/indent-blankline.nvim', main = 'ibl', opts = {},},
   { 'numToStr/Comment.nvim', opts = {} },
-
   -- Fuzzy Finder (files, lsp, etc)
   {
     'nvim-telescope/telescope.nvim',
@@ -143,7 +115,6 @@ require('lazy').setup({
       },
     },
   },
-
   {
     -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
@@ -156,48 +127,33 @@ require('lazy').setup({
     "danymat/neogen",
     dependencies = "nvim-treesitter/nvim-treesitter",
     config = true,
-    languages = {python = {template = {annotation_convention = "google_docstrings"}}},
+    languages = { python = { template = { annotation_convention = "google_docstrings" } } },
   }
-
-  -- Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   -- { import = 'custom.plugins' },
 }, {})
 
 -- Set highlight on search
 vim.o.hlsearch = false
-
--- Make line numbers default
 vim.wo.number = true
-
--- Enable mouse mode
 vim.o.mouse = 'i'
-
 vim.o.clipboard = 'unnamedplus'
 vim.o.breakindent = true
-
--- Save undo history
 vim.o.undofile = true
 
 -- Case-insensitive searching UNLESS \C or capital in search
 vim.o.ignorecase = true
 vim.o.smartcase = true
 
--- Keep signcolumn on by default
 vim.wo.signcolumn = 'yes'
-
--- Decrease update time
 vim.o.updatetime = 250
 vim.o.timeoutlen = 300
-
--- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
-
--- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
 
 -- [[ Basic Keymaps ]]
 
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
+vim.keymap.set('n', "<leader>t", vim.cmd.Ex)
 
 -- Remap for dealing with word wrap
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
@@ -229,11 +185,9 @@ require('telescope').setup {
     },
   },
 }
-
 -- Enable telescope fzf native, if installed
 pcall(require('telescope').load_extension, 'fzf')
 
--- Telescope live_grep in git root
 -- Function to find the git root directory based on the current buffer's path
 local function find_git_root()
   -- Use the current buffer's path as the starting point for the git search
@@ -292,7 +246,7 @@ vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = 
 vim.defer_fn(function()
   require('nvim-treesitter.configs').setup {
     -- Add languages to be installed here that you want installed for treesitter
-    ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash' },
+    ensure_installed = { 'c', 'cpp', 'lua', 'python', 'rust', 'javascript', 'vimdoc', 'vim', 'bash' },
     auto_install = false,
     highlight = { enable = true },
     indent = { enable = true },
@@ -353,7 +307,6 @@ vim.defer_fn(function()
 end, 0)
 
 -- [[ Configure LSP ]]
---  This function gets run when an LSP connects to a particular buffer.
 local on_attach = function(_, bufnr)
   -- In this case, we create a function that lets us more easily define mappings specific
   -- for LSP related items. It sets the mode, buffer and description for us each time.
@@ -429,11 +382,9 @@ capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
 -- Ensure the servers above are installed
 local mason_lspconfig = require 'mason-lspconfig'
-
 mason_lspconfig.setup {
   ensure_installed = vim.tbl_keys(servers),
 }
-
 mason_lspconfig.setup_handlers {
   function(server_name)
     require('lspconfig')[server_name].setup {
@@ -495,12 +446,10 @@ cmp.setup {
   },
 }
 local opts = {
-  auto_preview = false,
   width = 25,
   show_symbol_details = true,
   preview_bg_highlight = 'Pmenu',
   autofold_depth = nil,
-  wrap = false,
   keymaps = { -- These keymaps can be a string or a table for multiple keys
     close = { "<Esc>", "q" },
     goto_location = "<Cr>",
@@ -553,7 +502,7 @@ require("symbols-outline").setup(opts)
 vim.keymap.set('n', "<leader>o", ":SymbolsOutline<CR>")
 vim.keymap.set('n', "<leader>k", vim.cmd.UndotreeToggle)
 
-vim.api.nvim_set_keymap("n", "<Leader>cc", ":lua require('neogen').generate()<CR>", {noremap = true, silent = true})
+vim.api.nvim_set_keymap("n", "<Leader>cc", ":lua require('neogen').generate()<CR>", { noremap = true, silent = true })
 
 -- update buffers if files were changed outside
 vim.o.autoread = true
@@ -561,6 +510,11 @@ vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "CursorHoldI", "FocusGai
   command = "if mode() != 'c' | checktime | endif",
   pattern = { "*" },
 })
+
+function Toggle_rn()
+  vim.o.relativenumber = not vim.o.relativenumber
+end
+vim.keymap.set('n', "<leader>n", ':lua Toggle_rn()<CR>')
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
