@@ -45,7 +45,7 @@ require('lazy').setup({
       'hrsh7th/cmp-nvim-lsp',
     },
   },
-  { 'folke/which-key.nvim',  opts = {} },
+  { 'folke/which-key.nvim',                opts = {} },
   {
     'lewis6991/gitsigns.nvim',
     opts = {
@@ -87,19 +87,8 @@ require('lazy').setup({
       vim.cmd.colorscheme 'nordfox'
     end,
   },
-  {
-    'nvim-lualine/lualine.nvim',
-    opts = {
-      options = {
-        icons_enabled = false,
-        theme = 'nordfox',
-        component_separators = '|',
-        section_separators = '',
-      },
-    },
-  },
-  {'lukas-reineke/indent-blankline.nvim', main = 'ibl', opts = {},},
-  { 'numToStr/Comment.nvim', opts = {} },
+  { 'lukas-reineke/indent-blankline.nvim', main = 'ibl', opts = {}, },
+  { 'numToStr/Comment.nvim',               opts = {} },
   -- Fuzzy Finder (files, lsp, etc)
   {
     'nvim-telescope/telescope.nvim',
@@ -514,6 +503,7 @@ vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "CursorHoldI", "FocusGai
 function Toggle_rn()
   vim.o.relativenumber = not vim.o.relativenumber
 end
+
 vim.keymap.set('n', "<leader>n", ':lua Toggle_rn()<CR>')
 
 -- The line beneath this is called `modeline`. See `:help modeline`
