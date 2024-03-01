@@ -16,11 +16,17 @@ vim.opt.rtp:prepend(lazypath)
 
 require('lazy').setup({
   'tpope/vim-fugitive',
-  'simrat39/symbols-outline.nvim',
   'simrat39/rust-tools.nvim',
   -- Detect tabstop and shiftwidth automatically
   'tpope/vim-sleuth',
   'mbbill/undotree',
+  { -- Code outline
+    'stevearc/aerial.nvim',
+    opts = {},
+    dependencies = {
+       "nvim-treesitter/nvim-treesitter",
+    },
+  },
   {
     -- LSP Configuration & Plugins
     'neovim/nvim-lspconfig',
@@ -162,6 +168,7 @@ require('telescope').setup {
 }
 -- Enable telescope fzf native, if installed
 pcall(require('telescope').load_extension, 'fzf')
+pcall(require('telescope').load_extension, 'aerial')
 
 local function find_git_root()
   -- Use the current buffer's path as the starting point for the git search
@@ -215,6 +222,7 @@ vim.keymap.set('n', '<leader>sG', ':LiveGrepGitRoot<cr>', { desc = '[S]earch by 
 vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
 vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = '[S]earch [R]esume' })
 
+vim.keymap.set('n', '<leader>ss', ':Telescope aerial<cr>', { desc = '[S]earch [O]utline' })
 -- Defer Treesitter setup after first render to improve startup time of 'nvim {filename}'
 vim.defer_fn(function()
   require('nvim-treesitter.configs').setup {
@@ -416,63 +424,8 @@ cmp.setup {
     { name = 'luasnip' },
   },
 }
-local opts = {
-  width = 25,
-  show_symbol_details = true,
-  preview_bg_highlight = 'Pmenu',
-  autofold_depth = nil,
-  keymaps = { -- These keymaps can be a string or a table for multiple keys
-    close = { "<Esc>", "q" },
-    goto_location = "<Cr>",
-    focus_location = "o",
-    hover_symbol = "<C-space>",
-    rename_symbol = "r",
-    code_actions = "a",
-    fold = "h",
-    unfold = "l",
-    fold_all = "W",
-    unfold_all = "E",
-    fold_reset = "R",
-  },
-  lsp_blacklist = {},
-  symbol_blacklist = {
-    'Variable',
-  },
-  symbols = {
-    File = { icon = "F", hl = "@text.uri" },
-    Module = { icon = "M", hl = "@namespace" },
-    Namespace = { icon = "N", hl = "@namespace" },
-    Package = { icon = "P", hl = "@namespace" },
-    Class = { icon = "C", hl = "@type" },
-    Method = { icon = "f", hl = "@method" },
-    Property = { icon = "p", hl = "@method" },
-    Field = { icon = "fi", hl = "@field" },
-    Constructor = { icon = "c", hl = "@constructor" },
-    Enum = { icon = "e", hl = "@type" },
-    Interface = { icon = "i", hl = "@type" },
-    Function = { icon = "f", hl = "@function" },
-    Variable = { icon = "v", hl = "@constant" },
-    Constant = { icon = "c", hl = "@constant" },
-    String = { icon = "s", hl = "@string" },
-    Number = { icon = "n", hl = "@number" },
-    Boolean = { icon = "b", hl = "@boolean" },
-    Array = { icon = "a", hl = "@constant" },
-    Object = { icon = "o", hl = "@type" },
-    Key = { icon = "k", hl = "@type" },
-    Null = { icon = "", hl = "@type" },
-    EnumMember = { icon = "e", hl = "@field" },
-    Struct = { icon = "s", hl = "@type" },
-    Event = { icon = "e", hl = "@type" },
-    Operator = { icon = "+", hl = "@operator" },
-    TypeParameter = { icon = "t", hl = "@parameter" },
-    Component = { icon = "c", hl = "@function" },
-    Fragment = { icon = "f", hl = "@constant" },
-  },
-}
-require("symbols-outline").setup(opts)
-vim.keymap.set('n', "<leader>o", ":SymbolsOutline<CR>")
+vim.keymap.set('n', "<leader>o", ":AerialToggle<CR>")
 vim.keymap.set('n', "<leader>k", vim.cmd.UndotreeToggle)
-
 vim.api.nvim_set_keymap("n", "<Leader>cc", ":lua require('neogen').generate()<CR>", { noremap = true, silent = true })
 
 -- update buffers if files were changed outside
