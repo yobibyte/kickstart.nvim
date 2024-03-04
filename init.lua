@@ -105,8 +105,7 @@ require('lazy').setup({
       },
     },
   },
-  {
-    -- Highlight, edit, and navigate code
+  {-- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     dependencies = {
       'nvim-treesitter/nvim-treesitter-textobjects',
@@ -168,40 +167,6 @@ require('telescope').setup {
 pcall(require('telescope').load_extension, 'fzf')
 pcall(require('telescope').load_extension, 'aerial')
 
-local function find_git_root()
-  -- Use the current buffer's path as the starting point for the git search
-  local current_file = vim.api.nvim_buf_get_name(0)
-  local current_dir
-  local cwd = vim.fn.getcwd()
-  -- If the buffer is not associated with a file, return nil
-  if current_file == "" then
-    current_dir = cwd
-  else
-    -- Extract the directory from the current file's path
-    current_dir = vim.fn.fnamemodify(current_file, ":h")
-  end
-  -- Find the Git root directory from the current file's path
-  local git_root = vim.fn.systemlist("git -C " .. vim.fn.escape(current_dir, " ") .. " rev-parse --show-toplevel")[1]
-  if vim.v.shell_error ~= 0 then
-    print("Not a git repository. Searching on current working directory")
-    return cwd
-  end
-  return git_root
-end
-
--- Custom live_grep function to search in git root
-local function live_grep_git_root()
-  local git_root = find_git_root()
-  if git_root then
-    require('telescope.builtin').live_grep({
-      search_dirs = { git_root },
-    })
-  end
-end
-
-vim.api.nvim_create_user_command('LiveGrepGitRoot', live_grep_git_root, {})
-
--- See `:help telescope.builtin`
 vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })
 vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers, { desc = '[ ] Find existing buffers' })
 vim.keymap.set('n', '<leader>/', function()
@@ -216,7 +181,6 @@ vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { des
 vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
 vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
 vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
-vim.keymap.set('n', '<leader>sG', ':LiveGrepGitRoot<cr>', { desc = '[S]earch by [G]rep on Git Root' })
 vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
 vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = '[S]earch [R]esume' })
 
@@ -224,7 +188,6 @@ vim.keymap.set('n', '<leader>ss', ':Telescope aerial<cr>', { desc = '[S]earch [O
 -- Defer Treesitter setup after first render to improve startup time of 'nvim {filename}'
 vim.defer_fn(function()
   require('nvim-treesitter.configs').setup {
-    -- Add languages to be installed here that you want installed for treesitter
     ensure_installed = { 'c', 'cpp', 'lua', 'python', 'rust', 'javascript', 'vimdoc', 'vim', 'bash' },
     auto_install = false,
     highlight = { enable = true },
