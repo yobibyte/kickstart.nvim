@@ -119,10 +119,8 @@ require('lazy').setup({
     config = true,
     languages = { python = { template = { annotation_convention = "google_docstrings" } } },
   }
-  -- { import = 'custom.plugins' },
 }, {})
 
--- Set highlight on search
 vim.o.hlsearch = false
 vim.wo.number = true
 vim.o.mouse = 'i'
