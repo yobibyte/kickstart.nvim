@@ -15,9 +15,9 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
   'tpope/vim-fugitive',
   'simrat39/rust-tools.nvim',
-  -- Detect tabstop and shiftwidth automatically
-  'tpope/vim-sleuth',
+  'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
   'mbbill/undotree',
+  {'folke/which-key.nvim', opts = {} },
   { -- Code outline
     'stevearc/aerial.nvim',
     opts = {},
@@ -25,8 +25,7 @@ require('lazy').setup({
        "nvim-treesitter/nvim-treesitter",
     },
   },
-  {
-    'neovim/nvim-lspconfig',
+  {'neovim/nvim-lspconfig',
     dependencies = {
       'williamboman/mason.nvim',
       'williamboman/mason-lspconfig.nvim',
@@ -43,52 +42,24 @@ require('lazy').setup({
       'hrsh7th/cmp-nvim-lsp',
     },
   },
-  { 'folke/which-key.nvim',                opts = {} },
-  {
-    'lewis6991/gitsigns.nvim',
+  {'lewis6991/gitsigns.nvim',
     opts = {
       signs = {
         add = { text = '+' },
         change = { text = '~' },
         changedelete = { text = '~' },
       },
-      on_attach = function(bufnr)
-        vim.keymap.set('n', '<leader>hp', require('gitsigns').preview_hunk, { buffer = bufnr, desc = 'Preview git hunk' })
-        vim.keymap.set('n', '<leader>hr', require('gitsigns').reset_hunk, { desc = 'Reset hunk' })
-        -- don't override the built-in and fugitive keymaps
-        local gs = package.loaded.gitsigns
-        vim.keymap.set({ 'n', 'v' }, ']c', function()
-          if vim.wo.diff then
-            return ']c'
-          end
-          vim.schedule(function()
-            gs.next_hunk()
-          end)
-          return '<Ignore>'
-        end, { expr = true, buffer = bufnr, desc = 'Jump to next hunk' })
-        vim.keymap.set({ 'n', 'v' }, '[c', function()
-          if vim.wo.diff then
-            return '[c'
-          end
-          vim.schedule(function()
-            gs.prev_hunk()
-          end)
-          return '<Ignore>'
-        end, { expr = true, buffer = bufnr, desc = 'Jump to previous hunk' })
-      end,
     },
   },
-  {
-    'EdenEast/nightfox.nvim',
+  {'EdenEast/nightfox.nvim',
     priority = 1000,
     config = function()
       vim.cmd.colorscheme 'nordfox'
     end,
   },
-  { 'lukas-reineke/indent-blankline.nvim', main = 'ibl', opts = {}, },
-  { 'numToStr/Comment.nvim',               opts = {} },
-  {
-    'nvim-telescope/telescope.nvim',
+  {'lukas-reineke/indent-blankline.nvim', main = 'ibl', opts = {}, },
+  {'numToStr/Comment.nvim', opts = {} },
+  {'nvim-telescope/telescope.nvim',
     branch = '0.1.x',
     dependencies = {
       'nvim-lua/plenary.nvim',
@@ -108,8 +79,7 @@ require('lazy').setup({
     },
     build = ':TSUpdate',
   },
-  {
-    "danymat/neogen",
+  {"danymat/neogen",
     dependencies = "nvim-treesitter/nvim-treesitter",
     config = true,
     languages = { python = { template = { annotation_convention = "google_docstrings" } } },
@@ -174,8 +144,11 @@ vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = 
 vim.keymap.set('n', '<leader>ss', ':Telescope aerial<cr>', { desc = '[S]earch [O]utline' })
 vim.defer_fn(function() -- Defer setup after first render to improve startup time.
   require('nvim-treesitter.configs').setup {
-    ensure_installed = { 'c', 'cpp', 'lua', 'python', 'rust', 'javascript', 'vimdoc', 'vim', 'bash' },
+    ensure_installed = { 'c', 'cpp', 'lua', 'python', 'rust', 'vimdoc', 'vim', 'bash' },
+    ignore_install = {'javascript'},
     auto_install = false,
+    sync_install = false,
+    modules = {},
     highlight = { enable = true },
     indent = { enable = true },
     incremental_selection = {
@@ -192,7 +165,6 @@ vim.defer_fn(function() -- Defer setup after first render to improve startup tim
         enable = true,
         lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
         keymaps = {
-          -- You can use the capture groups defined in textobjects.scm
           ['aa'] = '@parameter.outer',
           ['ia'] = '@parameter.inner',
           ['af'] = '@function.outer',
@@ -221,15 +193,6 @@ vim.defer_fn(function() -- Defer setup after first render to improve startup tim
           ['[]'] = '@class.outer',
         },
       },
-      swap = {
-        enable = true,
-        swap_next = {
-          ['<leader>a'] = '@parameter.inner',
-        },
-        swap_previous = {
-          ['<leader>A'] = '@parameter.inner',
-        },
-      },
     },
   }
 end, 0)
@@ -251,7 +214,6 @@ local on_attach = function(_, bufnr)
   nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
   nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
 end
-
 require('mason').setup()
 require('mason-lspconfig').setup()
 require('neodev').setup()
@@ -269,11 +231,8 @@ local servers = {
 -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
--- Ensure the servers above are installed
 local mason_lspconfig = require 'mason-lspconfig'
-mason_lspconfig.setup {
-  ensure_installed = vim.tbl_keys(servers),
-}
+mason_lspconfig.setup {ensure_installed = vim.tbl_keys(servers),}
 mason_lspconfig.setup_handlers {
   function(server_name)
     require('lspconfig')[server_name].setup {
@@ -294,9 +253,7 @@ cmp.setup {
       luasnip.lsp_expand(args.body)
     end,
   },
-  completion = {
-    completeopt = 'menu,menuone,noinsert'
-  },
+  completion = {completeopt = 'menu,menuone,noinsert'},
   mapping = cmp.mapping.preset.insert {
     ['<C-n>'] = cmp.mapping.select_next_item(),
     ['<C-p>'] = cmp.mapping.select_prev_item(),
