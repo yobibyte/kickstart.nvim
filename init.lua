@@ -18,13 +18,7 @@ require('lazy').setup({
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
   'mbbill/undotree',
   {'folke/which-key.nvim', opts = {} },
-  { -- Code outline
-    'stevearc/aerial.nvim',
-    opts = {},
-    dependencies = {
-       "nvim-treesitter/nvim-treesitter",
-    },
-  },
+  {'stevearc/aerial.nvim',opts = {},dependencies = {"nvim-treesitter/nvim-treesitter",},},
   {'neovim/nvim-lspconfig',
     dependencies = {
       'williamboman/mason.nvim',
@@ -34,14 +28,7 @@ require('lazy').setup({
       'folke/neodev.nvim',
     },
   },
-  { -- Autocompletion
-    'hrsh7th/nvim-cmp',
-    dependencies = {
-      'L3MON4D3/LuaSnip',
-      'saadparwaiz1/cmp_luasnip',
-      'hrsh7th/cmp-nvim-lsp',
-    },
-  },
+  {'hrsh7th/nvim-cmp',dependencies = {'L3MON4D3/LuaSnip','saadparwaiz1/cmp_luasnip','hrsh7th/cmp-nvim-lsp',},},
   {'lewis6991/gitsigns.nvim',
     opts = {
       signs = {
@@ -51,12 +38,7 @@ require('lazy').setup({
       },
     },
   },
-  {'EdenEast/nightfox.nvim',
-    priority = 1000,
-    config = function()
-      vim.cmd.colorscheme 'nordfox'
-    end,
-  },
+  {'EdenEast/nightfox.nvim', priority = 1000, config = function() vim.cmd.colorscheme 'nordfox' end,},
   {'lukas-reineke/indent-blankline.nvim', main = 'ibl', opts = {}, },
   {'numToStr/Comment.nvim', opts = {} },
   {'nvim-telescope/telescope.nvim',
@@ -72,16 +54,8 @@ require('lazy').setup({
       },
     },
   },
-  {-- Highlight, edit, and navigate code
-    'nvim-treesitter/nvim-treesitter',
-    dependencies = {
-      'nvim-treesitter/nvim-treesitter-textobjects',
-    },
-    build = ':TSUpdate',
-  },
-  {"danymat/neogen",
-    dependencies = "nvim-treesitter/nvim-treesitter",
-    config = true,
+  {'nvim-treesitter/nvim-treesitter', dependencies = {'nvim-treesitter/nvim-treesitter-textobjects',},build = ':TSUpdate',},
+  {"danymat/neogen", dependencies = "nvim-treesitter/nvim-treesitter", config = true,
     languages = { python = { template = { annotation_convention = "google_docstrings" } } },
   }
 }, {})
@@ -114,16 +88,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   group = vim.api.nvim_create_augroup('YankHighlight', { clear = true }),
   pattern = '*',
 })
-require('telescope').setup {
-  defaults = {
-    mappings = {
-      i = {
-        ['<C-u>'] = false,
-        ['<C-d>'] = false,
-      },
-    },
-  },
-}
+require('telescope').setup {defaults = {mappings = {i = {['<C-u>'] = false,['<C-d>'] = false,},},},}
 pcall(require('telescope').load_extension, 'fzf')
 pcall(require('telescope').load_extension, 'aerial')
 
@@ -281,10 +246,7 @@ cmp.setup {
       end
     end, { 'i', 's' }),
   },
-  sources = {
-    { name = 'nvim_lsp' },
-    { name = 'luasnip' },
-  },
+  sources = {{ name = 'nvim_lsp' },{ name = 'luasnip' },},
 }
 vim.keymap.set('n', "<leader>o", ":AerialToggle<CR>")
 vim.keymap.set('n', "<leader>k", vim.cmd.UndotreeToggle)
