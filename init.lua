@@ -97,10 +97,7 @@ vim.defer_fn(function() -- Defer setup after first render to improve startup tim
   }
 end, 0)
 local on_attach = function(_, bufnr)
-  local nmap = function(keys, func, desc)
-    if desc then desc = 'LSP: ' .. desc end
-    vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
-  end
+  local nmap = function(keys, func, desc) vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc }) end
   nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
   nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
   nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
@@ -122,40 +119,24 @@ capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 local mason_lspconfig = require 'mason-lspconfig'
 mason_lspconfig.setup {ensure_installed = vim.tbl_keys(servers),}
 mason_lspconfig.setup_handlers {
-  function(server_name)
-    require('lspconfig')[server_name].setup {
+  function(server_name) require('lspconfig')[server_name].setup {
       capabilities = capabilities, on_attach = on_attach,
-      settings = servers[server_name], filetypes = (servers[server_name] or {}).filetypes,
-    }
-  end,
+      settings = servers[server_name], filetypes = (servers[server_name] or {}).filetypes, } end,
 }
 local cmp = require 'cmp'
 local luasnip = require 'luasnip'
 luasnip.config.setup {}
-cmp.setup {
-  snippet = {expand = function(args) luasnip.lsp_expand(args.body) end,},
+cmp.setup { snippet = {expand = function(args) luasnip.lsp_expand(args.body) end,},
   completion = {completeopt = 'menu,menuone,noinsert'},
   mapping = cmp.mapping.preset.insert {
     ['<C-n>'] = cmp.mapping.select_next_item(),
     ['<C-p>'] = cmp.mapping.select_prev_item(),
     ['<CR>'] = cmp.mapping.confirm {behavior = cmp.ConfirmBehavior.Replace,select = true,},
     ['<Tab>'] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        cmp.select_next_item()
-      elseif luasnip.expand_or_locally_jumpable() then
-        luasnip.expand_or_jump()
-      else
-        fallback()
-      end
+      if cmp.visible() then cmp.select_next_item() elseif luasnip.expand_or_locally_jumpable() then luasnip.expand_or_jump() else fallback() end
     end, { 'i', 's' }),
     ['<S-Tab>'] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        cmp.select_prev_item()
-      elseif luasnip.locally_jumpable(-1) then
-        luasnip.jump(-1)
-      else
-        fallback()
-      end
+      if cmp.visible() then cmp.select_prev_item() elseif luasnip.locally_jumpable(-1) then luasnip.jump(-1) else fallback() end
     end, { 'i', 's' }),
   },
   sources = {{ name = 'nvim_lsp' },{ name = 'luasnip' },},
