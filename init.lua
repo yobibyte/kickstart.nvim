@@ -16,8 +16,7 @@ vim.o.termguicolors = true
 vim.o.autoread = true -- update buffers if files were changed outside
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
 if not vim.loop.fs_stat(lazypath) then
-  vim.fn.system {'git', 'clone', '--filter=blob:none', 'https://github.com/folke/lazy.nvim.git', '--branch=stable', lazypath,}
-end
+  vim.fn.system {'git', 'clone', '--filter=blob:none', 'https://github.com/folke/lazy.nvim.git', '--branch=stable', lazypath,} end
 vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
   'tpope/vim-fugitive',
@@ -25,20 +24,17 @@ require('lazy').setup({
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
   'mbbill/undotree',
   {'stevearc/aerial.nvim',opts = {},dependencies = {"nvim-treesitter/nvim-treesitter",},},
-  {'neovim/nvim-lspconfig', dependencies = {'williamboman/mason.nvim', 'williamboman/mason-lspconfig.nvim', {'j-hui/fidget.nvim', opts = {} }, 'folke/neodev.nvim',},},
+  {'neovim/nvim-lspconfig', dependencies = {'williamboman/mason.nvim', 'williamboman/mason-lspconfig.nvim', {'j-hui/fidget.nvim', opts = {} },},},
   {'hrsh7th/nvim-cmp',dependencies = {'L3MON4D3/LuaSnip','saadparwaiz1/cmp_luasnip','hrsh7th/cmp-nvim-lsp',},},
   {'lewis6991/gitsigns.nvim', opts = {signs = {add = { text = '+' }, change = { text = '~' }, changedelete = { text = '~' },},},},
   {'EdenEast/nightfox.nvim', priority = 1000, config = function() vim.cmd.colorscheme 'nordfox' end,},
   {'lukas-reineke/indent-blankline.nvim', main = 'ibl', opts = {}, },
   {'numToStr/Comment.nvim', opts = {} },
-  {'nvim-telescope/telescope.nvim', branch = '0.1.x',
-    dependencies = { 'nvim-lua/plenary.nvim',
-      {'nvim-telescope/telescope-fzf-native.nvim', build = 'make', cond = function() return vim.fn.executable 'make' == 1 end,},
-    },},
+  {'nvim-telescope/telescope.nvim', branch = '0.1.x', dependencies = { 'nvim-lua/plenary.nvim',
+    {'nvim-telescope/telescope-fzf-native.nvim', build = 'make', cond = function() return vim.fn.executable 'make' == 1 end,},},},
   {'nvim-treesitter/nvim-treesitter', dependencies = {'nvim-treesitter/nvim-treesitter-textobjects',},build = ':TSUpdate',},
   {"danymat/neogen", dependencies = "nvim-treesitter/nvim-treesitter", config = true,
-    languages = { python = { template = { annotation_convention = "google_docstrings" } } },}
-}, {})
+    languages = { python = { template = { annotation_convention = "google_docstrings" } } },}}, {})
 vim.api.nvim_create_autocmd('TextYankPost', {callback = function() vim.highlight.on_yank() end,
   group = vim.api.nvim_create_augroup('YankHighlight', { clear = true }), pattern = '*',})
 require('telescope').setup {defaults = {mappings = {i = {['<C-u>'] = false,['<C-d>'] = false,},},},}
@@ -60,6 +56,10 @@ vim.keymap.set('n', "<leader>t", vim.cmd.Ex)
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic message' })
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic message' })
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
+vim.keymap.set('n', "<leader>o", ":AerialToggle<CR>")
+vim.keymap.set('n', "<leader>k", vim.cmd.UndotreeToggle)
+vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
+vim.api.nvim_set_keymap("n", "<Leader>cc", ":lua require('neogen').generate()<CR>", { noremap = true, silent = true })
 vim.defer_fn(function()
   require('nvim-treesitter.configs').setup {
     ensure_installed = { 'c', 'cpp', 'lua', 'python', 'rust', 'vimdoc', 'vim', 'bash' }, ignore_install = {'javascript'},
@@ -69,26 +69,21 @@ vim.defer_fn(function()
     textobjects = {
       select = { enable = true, lookahead = true,
         keymaps = {['aa'] = '@parameter.outer', ['ia'] = '@parameter.inner', ['af'] = '@function.outer',
-                   ['if'] = '@function.inner',  ['ac'] = '@class.outer',     ['ic'] = '@class.inner',},
-      },
+                   ['if'] = '@function.inner',  ['ac'] = '@class.outer',     ['ic'] = '@class.inner',},},
       move = { enable = true, set_jumps = true, goto_next_start = {    [']m'] = '@function.outer',[']]'] = '@class.outer',},
-        goto_previous_start = {['[m'] = '@function.outer',['[['] = '@class.outer',},},},
-  } end, 0)
+        goto_previous_start = {['[m'] = '@function.outer',['[['] = '@class.outer',},},},} end, 0)
 local on_attach = function(_, bufnr)
   local nmap = function(keys, func, desc) vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc }) end
-  nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
-  nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
-  nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
-  nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
-  nmap('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
-  nmap('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
   nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
   nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
   nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
-end
+  nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
+  nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
+  nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
+  nmap('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
+  nmap('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')end
 require('mason').setup()
 require('mason-lspconfig').setup()
-require('neodev').setup()
 local servers = { pyright = {}, html = {}, rust_analyzer = {}, lua_ls = {Lua = {workspace = { checkThirdParty = false }, telemetry = { enable = false },},},}
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
@@ -111,10 +106,5 @@ cmp.setup { snippet = {expand = function(args) luasnip.lsp_expand(args.body) end
       if cmp.visible() then cmp.select_prev_item() elseif luasnip.locally_jumpable(-1) then luasnip.jump(-1) else fallback() end
     end, { 'i', 's' }),
   },
-  sources = {{ name = 'nvim_lsp' },{ name = 'luasnip' },},
-}
-vim.keymap.set('n', "<leader>o", ":AerialToggle<CR>")
-vim.keymap.set('n', "<leader>k", vim.cmd.UndotreeToggle)
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
-vim.api.nvim_set_keymap("n", "<Leader>cc", ":lua require('neogen').generate()<CR>", { noremap = true, silent = true })
+  sources = {{ name = 'nvim_lsp' },{ name = 'luasnip' },},}
 vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "CursorHoldI", "FocusGained" }, {command = "if mode() != 'c' | checktime | endif", pattern = { "*" },})
