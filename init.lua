@@ -39,11 +39,8 @@ require('lazy').setup({
   {"danymat/neogen", dependencies = "nvim-treesitter/nvim-treesitter", config = true,
     languages = { python = { template = { annotation_convention = "google_docstrings" } } },}
 }, {})
-vim.api.nvim_create_autocmd('TextYankPost', {
-  callback = function() vim.highlight.on_yank() end,
-  group = vim.api.nvim_create_augroup('YankHighlight', { clear = true }),
-  pattern = '*',
-})
+vim.api.nvim_create_autocmd('TextYankPost', {callback = function() vim.highlight.on_yank() end,
+  group = vim.api.nvim_create_augroup('YankHighlight', { clear = true }), pattern = '*',})
 require('telescope').setup {defaults = {mappings = {i = {['<C-u>'] = false,['<C-d>'] = false,},},},}
 pcall(require('telescope').load_extension, 'fzf')
 pcall(require('telescope').load_extension, 'aerial')
@@ -68,16 +65,14 @@ vim.defer_fn(function()
     ensure_installed = { 'c', 'cpp', 'lua', 'python', 'rust', 'vimdoc', 'vim', 'bash' }, ignore_install = {'javascript'},
     auto_install = false, sync_install = false, modules = {}, highlight = { enable = true }, indent = { enable = true },
     incremental_selection = { enable = true,
-      keymaps = {init_selection = '<c-space>', node_incremental = '<c-space>', scope_incremental = '<c-s>', node_decremental = '<M-space>',},
-    },
+      keymaps = {init_selection = '<c-space>', node_incremental = '<c-space>', scope_incremental = '<c-s>', node_decremental = '<M-space>',},},
     textobjects = {
       select = { enable = true, lookahead = true,
         keymaps = {['aa'] = '@parameter.outer', ['ia'] = '@parameter.inner', ['af'] = '@function.outer',
                    ['if'] = '@function.inner',  ['ac'] = '@class.outer',     ['ic'] = '@class.inner',},
       },
       move = { enable = true, set_jumps = true, goto_next_start = {    [']m'] = '@function.outer',[']]'] = '@class.outer',},
-        goto_previous_start = {['[m'] = '@function.outer',['[['] = '@class.outer',},
-      },},
+        goto_previous_start = {['[m'] = '@function.outer',['[['] = '@class.outer',},},},
   } end, 0)
 local on_attach = function(_, bufnr)
   local nmap = function(keys, func, desc) vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc }) end
@@ -94,18 +89,13 @@ end
 require('mason').setup()
 require('mason-lspconfig').setup()
 require('neodev').setup()
-local servers = { pyright = {}, html = {}, rust_analyzer = {},
-  lua_ls = {Lua = {workspace = { checkThirdParty = false }, telemetry = { enable = false },},},
-}
+local servers = { pyright = {}, html = {}, rust_analyzer = {}, lua_ls = {Lua = {workspace = { checkThirdParty = false }, telemetry = { enable = false },},},}
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 local mason_lspconfig = require 'mason-lspconfig'
 mason_lspconfig.setup {ensure_installed = vim.tbl_keys(servers),}
-mason_lspconfig.setup_handlers {
-  function(server_name) require('lspconfig')[server_name].setup {
-      capabilities = capabilities, on_attach = on_attach,
-      settings = servers[server_name], filetypes = (servers[server_name] or {}).filetypes, } end,
-}
+mason_lspconfig.setup_handlers {function(server_name) require('lspconfig')[server_name].setup {
+  capabilities = capabilities, on_attach = on_attach, settings = servers[server_name], filetypes = (servers[server_name] or {}).filetypes, } end,}
 local cmp = require 'cmp'
 local luasnip = require 'luasnip'
 luasnip.config.setup {}
