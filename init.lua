@@ -14,7 +14,6 @@ vim.o.timeoutlen = 300
 vim.o.completeopt = 'menuone,noselect'
 vim.o.termguicolors = true
 vim.o.autoread = true -- update buffers if files were changed outside
-
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system {'git', 'clone', '--filter=blob:none', 'https://github.com/folke/lazy.nvim.git', '--branch=stable', lazypath,}
@@ -33,15 +32,12 @@ require('lazy').setup({
   {'lukas-reineke/indent-blankline.nvim', main = 'ibl', opts = {}, },
   {'numToStr/Comment.nvim', opts = {} },
   {'nvim-telescope/telescope.nvim', branch = '0.1.x',
-    dependencies = {
-       'nvim-lua/plenary.nvim',
+    dependencies = { 'nvim-lua/plenary.nvim',
       {'nvim-telescope/telescope-fzf-native.nvim', build = 'make', cond = function() return vim.fn.executable 'make' == 1 end,},
-    },
-  },
+    },},
   {'nvim-treesitter/nvim-treesitter', dependencies = {'nvim-treesitter/nvim-treesitter-textobjects',},build = ':TSUpdate',},
   {"danymat/neogen", dependencies = "nvim-treesitter/nvim-treesitter", config = true,
-    languages = { python = { template = { annotation_convention = "google_docstrings" } } },
-  }
+    languages = { python = { template = { annotation_convention = "google_docstrings" } } },}
 }, {})
 vim.api.nvim_create_autocmd('TextYankPost', {
   callback = function() vim.highlight.on_yank() end,
@@ -67,35 +63,22 @@ vim.keymap.set('n', "<leader>t", vim.cmd.Ex)
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic message' })
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic message' })
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
-
-vim.defer_fn(function() -- Defer setup after first render to improve startup time.
+vim.defer_fn(function()
   require('nvim-treesitter.configs').setup {
     ensure_installed = { 'c', 'cpp', 'lua', 'python', 'rust', 'vimdoc', 'vim', 'bash' }, ignore_install = {'javascript'},
     auto_install = false, sync_install = false, modules = {}, highlight = { enable = true }, indent = { enable = true },
     incremental_selection = { enable = true,
-      keymaps = {
-        init_selection = '<c-space>',
-        node_incremental = '<c-space>',
-        scope_incremental = '<c-s>',
-        node_decremental = '<M-space>',
-      },
+      keymaps = {init_selection = '<c-space>', node_incremental = '<c-space>', scope_incremental = '<c-s>', node_decremental = '<M-space>',},
     },
     textobjects = {
       select = { enable = true, lookahead = true,
-        keymaps = {
-          ['aa'] = '@parameter.outer', ['ia'] = '@parameter.inner',
-          ['af'] = '@function.outer',  ['if'] = '@function.inner',
-          ['ac'] = '@class.outer',     ['ic'] = '@class.inner',
-        },
+        keymaps = {['aa'] = '@parameter.outer', ['ia'] = '@parameter.inner', ['af'] = '@function.outer',
+                   ['if'] = '@function.inner',  ['ac'] = '@class.outer',     ['ic'] = '@class.inner',},
       },
-      move = {
-        enable = true, set_jumps = true,
-        goto_next_start = {    [']m'] = '@function.outer',[']]'] = '@class.outer',},
+      move = { enable = true, set_jumps = true, goto_next_start = {    [']m'] = '@function.outer',[']]'] = '@class.outer',},
         goto_previous_start = {['[m'] = '@function.outer',['[['] = '@class.outer',},
-      },
-    },
-  }
-end, 0)
+      },},
+  } end, 0)
 local on_attach = function(_, bufnr)
   local nmap = function(keys, func, desc) vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc }) end
   nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
@@ -129,8 +112,7 @@ luasnip.config.setup {}
 cmp.setup { snippet = {expand = function(args) luasnip.lsp_expand(args.body) end,},
   completion = {completeopt = 'menu,menuone,noinsert'},
   mapping = cmp.mapping.preset.insert {
-    ['<C-n>'] = cmp.mapping.select_next_item(),
-    ['<C-p>'] = cmp.mapping.select_prev_item(),
+    ['<C-n>'] = cmp.mapping.select_next_item(), ['<C-p>'] = cmp.mapping.select_prev_item(),
     ['<CR>'] = cmp.mapping.confirm {behavior = cmp.ConfirmBehavior.Replace,select = true,},
     ['<Tab>'] = cmp.mapping(function(fallback)
       if cmp.visible() then cmp.select_next_item() elseif luasnip.expand_or_locally_jumpable() then luasnip.expand_or_jump() else fallback() end
