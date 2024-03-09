@@ -13,17 +13,10 @@ vim.o.updatetime = 250
 vim.o.timeoutlen = 300
 vim.o.completeopt = 'menuone,noselect'
 vim.o.termguicolors = true
-
+vim.o.autoread = true -- update buffers if files were changed outside
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
 if not vim.loop.fs_stat(lazypath) then
-  vim.fn.system {
-    'git',
-    'clone',
-    '--filter=blob:none',
-    'https://github.com/folke/lazy.nvim.git',
-    '--branch=stable', -- latest stable release
-    lazypath,
-  }
+  vim.fn.system {'git', 'clone', '--filter=blob:none', 'https://github.com/folke/lazy.nvim.git', '--branch=stable', lazypath,}
 end
 vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
@@ -31,7 +24,6 @@ require('lazy').setup({
   'simrat39/rust-tools.nvim',
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
   'mbbill/undotree',
-  {'folke/which-key.nvim', opts = {} },
   {'stevearc/aerial.nvim',opts = {},dependencies = {"nvim-treesitter/nvim-treesitter",},},
   {'neovim/nvim-lspconfig',
     dependencies = {
@@ -43,15 +35,7 @@ require('lazy').setup({
     },
   },
   {'hrsh7th/nvim-cmp',dependencies = {'L3MON4D3/LuaSnip','saadparwaiz1/cmp_luasnip','hrsh7th/cmp-nvim-lsp',},},
-  {'lewis6991/gitsigns.nvim',
-    opts = {
-      signs = {
-        add = { text = '+' },
-        change = { text = '~' },
-        changedelete = { text = '~' },
-      },
-    },
-  },
+  {'lewis6991/gitsigns.nvim', opts = {signs = {add = { text = '+' }, change = { text = '~' }, changedelete = { text = '~' },},},},
   {'EdenEast/nightfox.nvim', priority = 1000, config = function() vim.cmd.colorscheme 'nordfox' end,},
   {'lukas-reineke/indent-blankline.nvim', main = 'ibl', opts = {}, },
   {'numToStr/Comment.nvim', opts = {} },
@@ -73,27 +57,19 @@ require('lazy').setup({
     languages = { python = { template = { annotation_convention = "google_docstrings" } } },
   }
 }, {})
-
 vim.api.nvim_create_autocmd('TextYankPost', {
-  callback = function()
-    vim.highlight.on_yank()
-  end,
+  callback = function() vim.highlight.on_yank() end,
   group = vim.api.nvim_create_augroup('YankHighlight', { clear = true }),
   pattern = '*',
 })
 require('telescope').setup {defaults = {mappings = {i = {['<C-u>'] = false,['<C-d>'] = false,},},},}
 pcall(require('telescope').load_extension, 'fzf')
 pcall(require('telescope').load_extension, 'aerial')
-
 vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })
 vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers, { desc = '[ ] Find existing buffers' })
 vim.keymap.set('n', '<leader>/', function()
-  require('telescope.builtin').current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
-    winblend = 10,
-    previewer = false,
-  })
+  require('telescope.builtin').current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {winblend = 10, previewer = false,})
 end, { desc = '[/] Fuzzily search in current buffer' })
-
 vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
 vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
 vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
@@ -101,7 +77,6 @@ vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc
 vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
 vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = '[S]earch [R]esume' })
 vim.keymap.set('n', '<leader>ss', ':Telescope aerial<cr>', { desc = '[S]earch [O]utline' })
-vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 vim.keymap.set('n', "<leader>t", vim.cmd.Ex)
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic message' })
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic message' })
@@ -117,8 +92,7 @@ vim.defer_fn(function() -- Defer setup after first render to improve startup tim
     modules = {},
     highlight = { enable = true },
     indent = { enable = true },
-    incremental_selection = {
-      enable = true,
+    incremental_selection = { enable = true,
       keymaps = {
         init_selection = '<c-space>',
         node_incremental = '<c-space>',
@@ -127,37 +101,17 @@ vim.defer_fn(function() -- Defer setup after first render to improve startup tim
       },
     },
     textobjects = {
-      select = {
-        enable = true,
-        lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
+      select = { enable = true, lookahead = true,
         keymaps = {
-          ['aa'] = '@parameter.outer',
-          ['ia'] = '@parameter.inner',
-          ['af'] = '@function.outer',
-          ['if'] = '@function.inner',
-          ['ac'] = '@class.outer',
-          ['ic'] = '@class.inner',
+          ['aa'] = '@parameter.outer', ['ia'] = '@parameter.inner',
+          ['af'] = '@function.outer',  ['if'] = '@function.inner',
+          ['ac'] = '@class.outer',     ['ic'] = '@class.inner',
         },
       },
       move = {
-        enable = true,
-        set_jumps = true, 
-        goto_next_start = {
-          [']m'] = '@function.outer',
-          [']]'] = '@class.outer',
-        },
-        goto_next_end = {
-          [']M'] = '@function.outer',
-          [']['] = '@class.outer',
-        },
-        goto_previous_start = {
-          ['[m'] = '@function.outer',
-          ['[['] = '@class.outer',
-        },
-        goto_previous_end = {
-          ['[M'] = '@function.outer',
-          ['[]'] = '@class.outer',
-        },
+        enable = true, set_jumps = true,
+        goto_next_start = {    [']m'] = '@function.outer',[']]'] = '@class.outer',},
+        goto_previous_start = {['[m'] = '@function.outer',['[['] = '@class.outer',},
       },
     },
   }
@@ -183,13 +137,9 @@ end
 require('mason').setup()
 require('mason-lspconfig').setup()
 require('neodev').setup()
-local servers = {
-  pyright = {},
+local servers = { pyright = {}, html = {}, rust_analyzer = {},
   lua_ls = {Lua = {workspace = { checkThirdParty = false }, telemetry = { enable = false },},},
-  html = {},
-  rust_analyzer = {},
 }
--- nvim-cmp supports additional completion capabilities, so broadcast that to servers
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 local mason_lspconfig = require 'mason-lspconfig'
@@ -197,10 +147,8 @@ mason_lspconfig.setup {ensure_installed = vim.tbl_keys(servers),}
 mason_lspconfig.setup_handlers {
   function(server_name)
     require('lspconfig')[server_name].setup {
-      capabilities = capabilities,
-      on_attach = on_attach,
-      settings = servers[server_name],
-      filetypes = (servers[server_name] or {}).filetypes,
+      capabilities = capabilities, on_attach = on_attach,
+      settings = servers[server_name], filetypes = (servers[server_name] or {}).filetypes,
     }
   end,
 }
@@ -238,7 +186,6 @@ cmp.setup {
 vim.keymap.set('n', "<leader>o", ":AerialToggle<CR>")
 vim.keymap.set('n', "<leader>k", vim.cmd.UndotreeToggle)
 vim.api.nvim_set_keymap("n", "<Leader>cc", ":lua require('neogen').generate()<CR>", { noremap = true, silent = true })
-vim.o.autoread = true -- update buffers if files were changed outside
 vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "CursorHoldI", "FocusGained" }, {
   command = "if mode() != 'c' | checktime | endif",
   pattern = { "*" },
