@@ -90,10 +90,6 @@ cmp.setup { snippet = {expand = function(args) luasnip.lsp_expand(args.body) end
   completion = {completeopt = 'menu,menuone,noinsert'},
   mapping = cmp.mapping.preset.insert {
     ['<C-n>'] = cmp.mapping.select_next_item(), ['<C-p>'] = cmp.mapping.select_prev_item(),
-    ['<CR>'] = cmp.mapping.confirm {behavior = cmp.ConfirmBehavior.Replace,select = true,},
-    ['<Tab>'] = cmp.mapping(function(fallback)
-      if cmp.visible() then cmp.select_next_item() elseif luasnip.expand_or_locally_jumpable() then luasnip.expand_or_jump() else fallback() end end, { 'i', 's' }),
-    ['<S-Tab>'] = cmp.mapping(function(fallback)
-      if cmp.visible() then cmp.select_prev_item() elseif luasnip.locally_jumpable(-1) then luasnip.jump(-1) else fallback() end end, { 'i', 's' }),},
+    ['<CR>'] = cmp.mapping.confirm {behavior = cmp.ConfirmBehavior.Replace,select = true,},},
   sources = {{ name = 'nvim_lsp' },{ name = 'luasnip' },},}
 vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "CursorHoldI", "FocusGained" }, {command = "if mode() != 'c' | checktime | endif", pattern = { "*" },})
