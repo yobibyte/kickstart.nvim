@@ -30,7 +30,7 @@ require('lazy').setup({
   {'EdenEast/nightfox.nvim', priority = 1000, config = function() vim.cmd.colorscheme 'nordfox' end,},
   {'lukas-reineke/indent-blankline.nvim', main = 'ibl', opts = {}, },
   {'numToStr/Comment.nvim', opts = {} },
-  {'nvim-telescope/telescope.nvim', branch = '0.1.x', dependencies = { 'nvim-lua/plenary.nvim',
+  {'nvim-telescope/telescope.nvim', defaults={file_ignore_patterns={".venv.",},}, branch = '0.1.x', dependencies = { 'nvim-lua/plenary.nvim',
     {'nvim-telescope/telescope-fzf-native.nvim', build = 'make', cond = function() return vim.fn.executable 'make' == 1 end,},},},
   {'nvim-treesitter/nvim-treesitter', dependencies = {'nvim-treesitter/nvim-treesitter-textobjects',},build = ':TSUpdate',},
   {"danymat/neogen", dependencies = "nvim-treesitter/nvim-treesitter", config = true,
